@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.css">
+    <link rel="stylesheet" href="./public/css/style.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
+    <title>Document</title>
+</head>
+
+<body>
+
+
+    <div class="container-fluid">
+        <div class="mr-auto ml-auto col-xl-8 col-md-10 col-sm-12 card" id="main">
+
+            <div class="card-header">
+                <label for="output">Output:</label>
+                <div id="output"></div>
+            </div>
+            <div class="card-body">
+                <input type="text" class="form-control" placeholder="Input a math string" id="input">
+            </div>
+            <div class="card-footer animated" id="errors"></div>
+        </div>
+    </div>
+    <script src="./node_modules/jquery/dist/jquery.js"></script>
+    <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.js"></script>
+    <script src="main.js"></script>
+</body>
+
+</html>

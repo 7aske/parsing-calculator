@@ -1,0 +1,27 @@
+body,
+html {
+	font-family: 'Roboto';
+	font-weight: 700;
+	background-color: #444444;
+}
+#main {
+	margin-top: 10%;
+}
+#input {
+	font-size: 18px;
+	transition: all 500ms;
+	height: 2em;
+	&:focus {
+		font-size: 32px;
+	}
+}
+#output {
+	font-size: 22px;
+	padding-left: 30px;
+}
+.animated {
+	animation-duration: 500ms;
+}
+#errors {
+	transition: all 500ms;
+}
