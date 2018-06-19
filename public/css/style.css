@@ -1,34 +1,38 @@
 body,
 html {
-  font-family: 'Roboto';
-  font-weight: 700;
-  background-color: #444444;
+	font-family: 'Roboto';
+	font-weight: 700;
+	background-color: #444444;
 }
 
 #main {
-  margin-top: 10%;
+	margin-top: 10%;
 }
 
 #input {
-  font-size: 18px;
-  transition: all 500ms;
-  height: 2em;
+	font-size: 18px;
+	transition: all 500ms;
+	height: 2em;
 }
 
 #input:focus {
-  font-size: 32px;
+	font-size: 32px;
 }
 
 #output {
-  font-size: 22px;
-  padding-left: 30px;
+	font-size: 22px;
+	padding-left: 30px;
 }
 
 .animated {
-  animation-duration: 500ms;
+	animation-duration: 500ms;
 }
 
 #errors {
-  transition: all 500ms;
+	transition: all 500ms;
+}
+small {
+	padding-left: 5px;
+	color: #444444aa;
 }
 /*# sourceMappingURL=style.css.map */
