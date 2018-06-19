@@ -1,8 +1,6 @@
 window.innerHeight / window.innerWidth > 1
-	? (document.querySelector('#main').style.marginTop =
-			window.innerHeight * 0.05 + 'px')
-	: (document.querySelector('#main').style.marginTop =
-			window.innerHeight * 0.4 + 'px');
+	? (document.querySelector('#main').style.marginTop = window.innerHeight * 0.05 + 'px')
+	: (document.querySelector('#main').style.marginTop = window.innerHeight * 0.4 + 'px');
 
 class Calculator {
 	constructor() {
@@ -14,17 +12,24 @@ class Calculator {
 
 		//Regular expressions
 		this.number = new RegExp('[\\d.]');
-		this.operation = new RegExp('[-+*/\\^]');
-		this.priorityOperation = new RegExp('[*/\\^]');
+		this.operation = new RegExp('[-+*/\\^√]');
+		this.priorityOperation = new RegExp('[*/\\^√]');
 		this.parenthesis = new RegExp('\\([-\\d+*/]+\\)', 'g');
+		this.root = new RegExp('root');
 
 		//input handling
 		this.inputField.addEventListener('keyup', event => {
 			this.input = event.target.value;
 			this.handleInput();
 		});
+		this.lenny = '( ͡☉ ͜ʖ ͡☉)';
 	}
 	handleInput() {
+		if (this.input.match(this.root))
+			this.input.match(this.root).forEach(s => {
+				this.input = this.input.replace(s, '√');
+			});
+		this.inputField.value = this.input;
 		this.errorOutput.innerHTML = '';
 		let errors = this.checkErrors();
 		if (!errors) {
@@ -34,29 +39,20 @@ class Calculator {
 			console.log('result', result);
 			if (result == Infinity || isNaN(result)) {
 				let error = document.createElement('div');
-				error.classList.add(
-					'alert',
-					'alert-danger',
-					'animated',
-					'fadeIn'
-				);
-				error.innerText = 'Cannot divide with by zero';
+				error.classList.add('alert', 'alert-danger', 'animated', 'fadeIn');
+				error.innerHTML = 'Cannot divide with by zero';
 				this.errorOutput.appendChild(error);
+				this.outputField.innerHTML = this.lenny;
 			} else {
-				this.outputField.innerText = result;
+				this.outputField.innerHTML = result;
 			}
 		} else {
 			errors.forEach(e => {
 				let error = document.createElement('div');
-				error.classList.add(
-					'alert',
-					'alert-danger',
-					'animated',
-					'fadeIn'
-				);
-				error.innerText = e;
-
+				error.classList.add('alert', 'alert-danger', 'animated', 'fadeIn');
+				error.innerHTML = e;
 				this.errorOutput.appendChild(error);
+				this.outputField.innerHTML = this.lenny;
 			});
 		}
 	}
@@ -70,14 +66,12 @@ class Calculator {
 			if (openP.length != closedP.length) checkParenthesis = true;
 		}
 		const checkDouble = this.input.match(/[-+.^/*][-+.^/*]+/g);
-		console.log(checkDouble);
 		const checkEnding = this.input.match(/[-+.^/*]+$/g);
-		const checkLetters = this.input.match(/[^-\d.()^+*/]/g);
+		const checkLetters = this.input.match(/[^-\d.()^+*/√]/g);
 		if (checkParenthesis) errors.push('Unclosed parenthesis');
 		if (checkDouble) errors.push('Double operators');
 		if (checkEnding) errors.push('String must end with a number');
-		if (checkLetters)
-			errors.push('Invalid characters. Use 0-9 and + - * / ^');
+		if (checkLetters) errors.push('Invalid characters. Use 0-9 and + - * / ^ √');
 		if (errors.length != 0) return errors;
 		return false;
 	}
@@ -90,7 +84,7 @@ class Calculator {
 		return string;
 	}
 	calc(n1, n2, op) {
-		if (!n2) return (n1 = isNaN(n1) ? Number(n1.join('')) : Number(n1));
+		console.log(n1, op, n2);
 		n1 = isNaN(n1) ? Number(n1.join('')) : Number(n1);
 		n2 = isNaN(n2) ? Number(n2.join('')) : Number(n2);
 		console.log(n1, op, n2);
@@ -105,6 +99,14 @@ class Calculator {
 				return n1 / n2;
 			case '^':
 				return Math.pow(n1, n2);
+			case '√':
+				if (n1 == 0) {
+					return Math.pow(n2, 1 / 2);
+				} else {
+					return Math.pow(n2, 1 / n1);
+				}
+			default:
+				if (!n2) return (n1 = isNaN(n1) ? Number(n1.join('')) : Number(n1));
 		}
 	}
 	parse(array) {
@@ -118,35 +120,31 @@ class Calculator {
 		let op1 = null;
 		let op2 = null;
 		array.forEach((e, i) => {
+			if (e == '√' && op1 == null) {
+				op1 = '√';
+			} else if (e == '√' && op2 == null) {
+				op2 = '√';
+			}
 			if (this.number.test(e)) {
 				if (isNum1) {
-					if (
-						num1.length == 0 &&
-						array[i - 1] == '-' &&
-						(this.operation.test(array[i - 2]) || !array[i - 1])
-					) {
-						num1.push('-');
+					if (num1.length == 0 && array[i - 1] == '-' && (this.operation.test(array[i - 2]) || !array[i - 1])) {
+						console.log('pushing - ');
+						num1.push(-1 * e);
+					} else {
+						num1.push(e);
 					}
-					num1.push(e);
 				} else if (isNum2) {
-					if (
-						num2.length == 0 &&
-						array[i - 1] == '-' &&
-						this.operation.test(array[i - 2])
-					) {
+					if (num2.length == 0 && array[i - 1] == '-' && this.operation.test(array[i - 2])) {
 						num2.push(-1 * e);
 					} else {
 						num2.push(e);
 					}
 				} else {
-					if (
-						num3.length == 0 &&
-						array[i - 1] == '-' &&
-						this.operation.test(array[i - 2])
-					) {
-						num3.push('-');
+					if (num3.length == 0 && array[i - 1] == '-' && this.operation.test(array[i - 2])) {
+						num3.push(-1 * e);
+					} else {
+						num3.push(e);
 					}
-					num3.push(e);
 				}
 			}
 			if (i == array.length - 1) {
@@ -161,8 +159,9 @@ class Calculator {
 					num1 = this.calc(num1, num2, op1);
 					result = num1;
 				} else {
-					result =
-						num1 instanceof Array ? Number(num1.join('')) : num1;
+					console.log(num1);
+					// result = num1 instanceof Array ? Number(num1.join('')) : num1;
+					result = this.calc(num1, num2 ? num2 : null, op1 ? op1 : op2);
 				}
 			} else if (!isNum1 && !isNum2 && isNum3 && this.operation.test(e)) {
 				if (!e == '-' || !this.operation.test(array[i - 1])) {
@@ -173,10 +172,7 @@ class Calculator {
 			} else if (!isNum1 && isNum2 && this.operation.test(e)) {
 				if (!e == '-' || !this.operation.test(array[i - 1])) {
 					//num1 is already done, num2 is still filling and we reach an operator
-					if (
-						this.priorityOperation.test(e) ==
-						this.priorityOperation.test(op1)
-					) {
+					if (this.priorityOperation.test(e) == this.priorityOperation.test(op1)) {
 						//if operator priorities are the same
 						num1 = this.calc(num1, num2, op1);
 						isNum1 = false;
@@ -198,8 +194,8 @@ class Calculator {
 					}
 				}
 			} else if (this.operation.test(e)) {
-				if ((e == '-' && this.operation.test(array[i - 1])) || i == 0) {
-					num1.push('-');
+				if ((e == '-' && this.operation.test(array[i - 1])) || (i == 0 && (e == '+' || e == '-'))) {
+					num1.push(e);
 				} else {
 					isNum1 = false;
 					isNum2 = true;
