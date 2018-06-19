@@ -14,9 +14,9 @@ class Calculator {
 
 		//Regular expressions
 		this.number = new RegExp('[\\d.]');
-		this.operation = new RegExp('[-+*//]');
-		this.priorityOperation = new RegExp('[*//]');
-		this.parenthesis = new RegExp('\\([-\\d+*\\/]+\\)', 'g');
+		this.operation = new RegExp('[-+*/\\^]');
+		this.priorityOperation = new RegExp('[*/\\^]');
+		this.parenthesis = new RegExp('\\([-\\d+*/]+\\)', 'g');
 
 		//input handling
 		this.inputField.addEventListener('keyup', event => {
@@ -69,14 +69,15 @@ class Calculator {
 		if (openP && closedP) {
 			if (openP.length != closedP.length) checkParenthesis = true;
 		}
-		const checkDouble = this.input.match(/[-+.//*][-+.//*]+/g);
-		const checkEnding = this.input.match(/[-+.//*]+$/g);
-		const checkLetters = this.input.match(/[^-\d.()+*\/]/g);
+		const checkDouble = this.input.match(/[-+.^/*][-+.^/*]+/g);
+		console.log(checkDouble);
+		const checkEnding = this.input.match(/[-+.^/*]+$/g);
+		const checkLetters = this.input.match(/[^-\d.()^+*/]/g);
 		if (checkParenthesis) errors.push('Unclosed parenthesis');
-		if (checkDouble) errors.push('Double operators. For "-1" use "(-1)"');
+		if (checkDouble) errors.push('Double operators');
 		if (checkEnding) errors.push('String must end with a number');
 		if (checkLetters)
-			errors.push('Invalid characters. Use 0-9 and + - * /');
+			errors.push('Invalid characters. Use 0-9 and + - * / ^');
 		if (errors.length != 0) return errors;
 		return false;
 	}
@@ -102,6 +103,8 @@ class Calculator {
 				return n1 * n2;
 			case '/':
 				return n1 / n2;
+			case '^':
+				return Math.pow(n1, n2);
 		}
 	}
 	parse(array) {
