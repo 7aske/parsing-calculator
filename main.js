@@ -26,12 +26,12 @@ class Calculator {
 	}
 	handleInput() {
 		this.errorOutput.innerHTML = '';
-		console.log(this.input);
 		let errors = this.checkErrors();
 		if (!errors) {
 			this.formated = this.input;
 			this.formated = this.formatParenthesis(this.formated);
 			let result = this.parse(this.formated.split(''));
+			console.log('result', result);
 			if (result == Infinity || isNaN(result)) {
 				let error = document.createElement('div');
 				error.classList.add(
@@ -89,7 +89,7 @@ class Calculator {
 		return string;
 	}
 	calc(n1, n2, op) {
-		console.log(n1, n2, op);
+		if (!n2) return (n1 = isNaN(n1) ? Number(n1.join('')) : Number(n1));
 		n1 = isNaN(n1) ? Number(n1.join('')) : Number(n1);
 		n2 = isNaN(n2) ? Number(n2.join('')) : Number(n2);
 		console.log(n1, op, n2);
@@ -104,7 +104,6 @@ class Calculator {
 				return n1 / n2;
 		}
 	}
-
 	parse(array) {
 		let result = 0;
 		let num1 = [];
@@ -121,7 +120,7 @@ class Calculator {
 					if (
 						num1.length == 0 &&
 						array[i - 1] == '-' &&
-						this.operation.test(array[i - 2])
+						(this.operation.test(array[i - 2]) || !array[i - 1])
 					) {
 						num1.push('-');
 					}
@@ -158,6 +157,9 @@ class Calculator {
 					num2 = this.calc(num2, num3, op2);
 					num1 = this.calc(num1, num2, op1);
 					result = num1;
+				} else {
+					result =
+						num1 instanceof Array ? Number(num1.join('')) : num1;
 				}
 			} else if (!isNum1 && !isNum2 && isNum3 && this.operation.test(e)) {
 				if (!e == '-' || !this.operation.test(array[i - 1])) {
