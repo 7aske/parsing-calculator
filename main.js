@@ -19,7 +19,7 @@ class Calculator {
 
 		//input handling
 		this.inputField.addEventListener('keyup', event => {
-			this.input = event.target.value;
+			this.input = event.target.value.replace(/\s/g, '');
 			this.handleInput();
 		});
 		this.lenny = '( ͡☉ ͜ʖ ͡☉)';
